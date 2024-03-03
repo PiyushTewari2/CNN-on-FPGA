@@ -1,0 +1,251 @@
+`timescale 1ns / 1ps
+module convolution #(parameter IMAGE_DIM = 224, STRIDE = 2, DATA_WIDTH = 4, FILTER_SIZE = 3, NUM_CHANNELS = 3, NUM_FILTERS = 64, DATA_FILTER = 6)
+    (
+    input clk,
+    //input wire rst,
+    input [DATA_WIDTH*STRIDE-1:0] image_channel1, //TOH ME SOCH RAHA HU KI KYUNKI STRIDE KI VALUE 2 HAI TOH AGAR 2 PIXEL KA DATA EK HI BAAR ME LOAD HO JAE 
+    input [DATA_WIDTH*STRIDE-1:0] image_channel2,
+    input [DATA_WIDTH*STRIDE-1:0] image_channel3,
+    input [DATA_FILTER-1:0] filter1ch1,
+    input [DATA_FILTER-1:0] filter1ch2,
+    input [DATA_FILTER-1:0] filter1ch3,
+    input [DATA_FILTER-1:0] filter2ch1,
+    input [DATA_FILTER-1:0] filter2ch2,
+    input [DATA_FILTER-1:0] filter2ch3,
+    input [DATA_FILTER-1:0] filter3ch1,
+    input [DATA_FILTER-1:0] filter3ch2,
+    input [DATA_FILTER-1:0] filter3ch3,
+    input [DATA_FILTER-1:0] filter4ch1,
+    input [DATA_FILTER-1:0] filter4ch2,
+    input [DATA_FILTER-1:0] filter4ch3,
+    input [DATA_FILTER-1:0] filter5ch1,
+    input [DATA_FILTER-1:0] filter5ch2,
+    input [DATA_FILTER-1:0] filter5ch3,
+    input [DATA_FILTER-1:0] filter6ch1,
+    input [DATA_FILTER-1:0] filter6ch2,
+    input [DATA_FILTER-1:0] filter6ch3,
+    input [DATA_FILTER-1:0] filter7ch1,
+    input [DATA_FILTER-1:0] filter7ch2,
+    input [DATA_FILTER-1:0] filter7ch3,
+    input [DATA_FILTER-1:0] filter8ch1,
+    input [DATA_FILTER-1:0] filter8ch2,
+    input [DATA_FILTER-1:0] filter8ch3,
+    input [DATA_FILTER-1:0] filter9ch1,
+    input [DATA_FILTER-1:0] filter9ch2,
+    input [DATA_FILTER-1:0] filter9ch3,
+    input [DATA_FILTER-1:0] filter10ch1,
+    input [DATA_FILTER-1:0] filter10ch2,
+    input [DATA_FILTER-1:0] filter10ch3,
+    input [DATA_FILTER-1:0] filter11ch1,
+    input [DATA_FILTER-1:0] filter11ch2,
+    input [DATA_FILTER-1:0] filter11ch3,
+    input [DATA_FILTER-1:0] filter12ch1,
+    input [DATA_FILTER-1:0] filter12ch2,
+    input [DATA_FILTER-1:0] filter12ch3,
+    input [DATA_FILTER-1:0] filter13ch1,
+    input [DATA_FILTER-1:0] filter13ch2,
+    input [DATA_FILTER-1:0] filter13ch3,
+    input [DATA_FILTER-1:0] filter14ch1,
+    input [DATA_FILTER-1:0] filter14ch2,
+    input [DATA_FILTER-1:0] filter14ch3,
+    input [DATA_FILTER-1:0] filter15ch1,
+    input [DATA_FILTER-1:0] filter15ch2,
+    input [DATA_FILTER-1:0] filter15ch3,
+    input [DATA_FILTER-1:0] filter16ch1,
+    input [DATA_FILTER-1:0] filter16ch2,
+    input [DATA_FILTER-1:0] filter16ch3,
+    input [DATA_FILTER-1:0] filter17ch1,
+    input [DATA_FILTER-1:0] filter17ch2,
+    input [DATA_FILTER-1:0] filter17ch3,
+    input [DATA_FILTER-1:0] filter18ch1,
+    input [DATA_FILTER-1:0] filter18ch2,
+    input [DATA_FILTER-1:0] filter18ch3,
+    input [DATA_FILTER-1:0] filter19ch1,
+    input [DATA_FILTER-1:0] filter19ch2,
+    input [DATA_FILTER-1:0] filter19ch3,
+    input [DATA_FILTER-1:0] filter20ch1,
+    input [DATA_FILTER-1:0] filter20ch2,
+    input [DATA_FILTER-1:0] filter20ch3,
+    input [DATA_FILTER-1:0] filter21ch1,
+    input [DATA_FILTER-1:0] filter21ch2,
+    input [DATA_FILTER-1:0] filter21ch3,
+    input [DATA_FILTER-1:0] filter22ch1,
+    input [DATA_FILTER-1:0] filter22ch2,
+    input [DATA_FILTER-1:0] filter22ch3,
+    input [DATA_FILTER-1:0] filter23ch1,
+    input [DATA_FILTER-1:0] filter23ch2,
+    input [DATA_FILTER-1:0] filter23ch3,
+    input [DATA_FILTER-1:0] filter24ch1,
+    input [DATA_FILTER-1:0] filter24ch2,
+    input [DATA_FILTER-1:0] filter24ch3,
+    input [DATA_FILTER-1:0] filter25ch1,
+    input [DATA_FILTER-1:0] filter25ch2,
+    input [DATA_FILTER-1:0] filter25ch3,
+    input [DATA_FILTER-1:0] filter26ch1,
+    input [DATA_FILTER-1:0] filter26ch2,
+    input [DATA_FILTER-1:0] filter26ch3,
+    input [DATA_FILTER-1:0] filter27ch1,
+    input [DATA_FILTER-1:0] filter27ch2,
+    input [DATA_FILTER-1:0] filter27ch3,
+    input [DATA_FILTER-1:0] filter28ch1,
+    input [DATA_FILTER-1:0] filter28ch2,
+    input [DATA_FILTER-1:0] filter28ch3,
+    input [DATA_FILTER-1:0] filter29ch1,
+    input [DATA_FILTER-1:0] filter29ch2,
+    input [DATA_FILTER-1:0] filter29ch3,
+    input [DATA_FILTER-1:0] filter30ch1,
+    input [DATA_FILTER-1:0] filter30ch2,
+    input [DATA_FILTER-1:0] filter30ch3,
+    input [DATA_FILTER-1:0] filter31ch1,
+    input [DATA_FILTER-1:0] filter31ch2,
+    input [DATA_FILTER-1:0] filter31ch3,
+    input [DATA_FILTER-1:0] filter32ch1,
+    input [DATA_FILTER-1:0] filter32ch2,
+    input [DATA_FILTER-1:0] filter32ch3,
+    input [DATA_FILTER-1:0] filter33ch1,
+    input [DATA_FILTER-1:0] filter33ch2,
+    input [DATA_FILTER-1:0] filter33ch3,
+    input [DATA_FILTER-1:0] filter34ch1,
+    input [DATA_FILTER-1:0] filter34ch2,
+    input [DATA_FILTER-1:0] filter34ch3,
+    input [DATA_FILTER-1:0] filter35ch1,
+    input [DATA_FILTER-1:0] filter35ch2,
+    input [DATA_FILTER-1:0] filter35ch3,
+    input [DATA_FILTER-1:0] filter36ch1,
+    input [DATA_FILTER-1:0] filter36ch2,
+    input [DATA_FILTER-1:0] filter36ch3,
+    input [DATA_FILTER-1:0] filter37ch1,
+    input [DATA_FILTER-1:0] filter37ch2,
+    input [DATA_FILTER-1:0] filter37ch3,
+    input [DATA_FILTER-1:0] filter38ch1,
+    input [DATA_FILTER-1:0] filter38ch2,
+    input [DATA_FILTER-1:0] filter38ch3,
+    input [DATA_FILTER-1:0] filter39ch1,
+    input [DATA_FILTER-1:0] filter39ch2,
+    input [DATA_FILTER-1:0] filter39ch3,
+    input [DATA_FILTER-1:0] filter40ch1,
+    input [DATA_FILTER-1:0] filter40ch2,
+    input [DATA_FILTER-1:0] filter40ch3,
+    input [DATA_FILTER-1:0] filter41ch1,
+    input [DATA_FILTER-1:0] filter41ch2,
+    input [DATA_FILTER-1:0] filter41ch3,
+    input [DATA_FILTER-1:0] filter42ch1,
+    input [DATA_FILTER-1:0] filter42ch2,
+    input [DATA_FILTER-1:0] filter42ch3,
+    input [DATA_FILTER-1:0] filter43ch1,
+    input [DATA_FILTER-1:0] filter43ch2,
+    input [DATA_FILTER-1:0] filter43ch3,
+    input [DATA_FILTER-1:0] filter44ch1,
+    input [DATA_FILTER-1:0] filter44ch2,
+    input [DATA_FILTER-1:0] filter44ch3,
+    input [DATA_FILTER-1:0] filter45ch1,
+    input [DATA_FILTER-1:0] filter45ch2,
+    input [DATA_FILTER-1:0] filter45ch3,
+    input [DATA_FILTER-1:0] filter46ch1,
+    input [DATA_FILTER-1:0] filter46ch2,
+    input [DATA_FILTER-1:0] filter46ch3,
+    input [DATA_FILTER-1:0] filter47ch1,
+    input [DATA_FILTER-1:0] filter47ch2,
+    input [DATA_FILTER-1:0] filter47ch3,
+    input [DATA_FILTER-1:0] filter48ch1,
+    input [DATA_FILTER-1:0] filter48ch2,
+    input [DATA_FILTER-1:0] filter48ch3,
+    input [DATA_FILTER-1:0] filter49ch1,
+    input [DATA_FILTER-1:0] filter49ch2,
+    input [DATA_FILTER-1:0] filter49ch3,
+    input [DATA_FILTER-1:0] filter50ch1,
+    input [DATA_FILTER-1:0] filter50ch2,
+    input [DATA_FILTER-1:0] filter50ch3,
+    input [DATA_FILTER-1:0] filter51ch1,
+    input [DATA_FILTER-1:0] filter51ch2,
+    input [DATA_FILTER-1:0] filter51ch3,
+    input [DATA_FILTER-1:0] filter52ch1,
+    input [DATA_FILTER-1:0] filter52ch2,
+    input [DATA_FILTER-1:0] filter52ch3,
+    input [DATA_FILTER-1:0] filter53ch1,
+    input [DATA_FILTER-1:0] filter53ch2,
+    input [DATA_FILTER-1:0] filter53ch3,
+    input [DATA_FILTER-1:0] filter54ch1,
+    input [DATA_FILTER-1:0] filter54ch2,
+    input [DATA_FILTER-1:0] filter54ch3,
+    input [DATA_FILTER-1:0] filter55ch1,
+    input [DATA_FILTER-1:0] filter55ch2,
+    input [DATA_FILTER-1:0] filter55ch3,
+    input [DATA_FILTER-1:0] filter56ch1,
+    input [DATA_FILTER-1:0] filter56ch2,
+    input [DATA_FILTER-1:0] filter56ch3,
+    input [DATA_FILTER-1:0] filter57ch1,
+    input [DATA_FILTER-1:0] filter57ch2,
+    input [DATA_FILTER-1:0] filter57ch3,
+    input [DATA_FILTER-1:0] filter58ch1,
+    input [DATA_FILTER-1:0] filter58ch2,
+    input [DATA_FILTER-1:0] filter58ch3,
+    input [DATA_FILTER-1:0] filter59ch1,
+    input [DATA_FILTER-1:0] filter59ch2,
+    input [DATA_FILTER-1:0] filter59ch3,
+    input [DATA_FILTER-1:0] filter60ch1,
+    input [DATA_FILTER-1:0] filter60ch2,
+    input [DATA_FILTER-1:0] filter60ch3,
+    input [DATA_FILTER-1:0] filter61ch1,
+    input [DATA_FILTER-1:0] filter61ch2,
+    input [DATA_FILTER-1:0] filter61ch3,
+    input [DATA_FILTER-1:0] filter62ch1,
+    input [DATA_FILTER-1:0] filter62ch2,
+    input [DATA_FILTER-1:0] filter62ch3,
+    input [DATA_FILTER-1:0] filter63ch1,
+    input [DATA_FILTER-1:0] filter63ch2,
+    input [DATA_FILTER-1:0] filter63ch3,
+    input [DATA_FILTER-1:0] filter64ch1,
+    input [DATA_FILTER-1:0] filter64ch2,
+    input [DATA_FILTER-1:0] filter64ch3,
+    output reg [DATA_WIDTH-1:0] output_feature_map [0:216][0:216][0:NUM_FILTERS-1]);
+    
+    
+    reg [DATA_WIDTH-1:0] line_buffer_image_ch1 [IMAGE_DIM+2*STRIDE-1:0][FILTER_SIZE-1:0];  //line buffer for image will be a 2D array having vectors of size 4 bits, and dim as specified
+    reg [DATA_WIDTH-1:0] line_buffer_image_ch2 [IMAGE_DIM+2*STRIDE-1:0][FILTER_SIZE-1:0];
+    reg [DATA_WIDTH-1:0] line_buffer_image_ch3 [IMAGE_DIM+2*STRIDE-1:0][FILTER_SIZE-1:0];
+    
+    reg [DATA_FILTER-1:0] computation_block_weights [FILTER_SIZE-1:0][FILTER_SIZE-1:0][NUM_FILTERS*NUM_CHANNELS-1:0];
+    reg [DATA_WIDTH-1:0] computation_block_image [FILTER_SIZE-1:0][FILTER_SIZE-1:0][NUM_FILTERS*NUM_CHANNELS-1:0];
+
+    
+    reg [7:0] i;
+    reg [2:0] j;
+    
+    
+    //First we need to bring all the images in the line buffer
+    initial
+    begin
+        i <= 8'd0;
+        j <= 3'd0;
+        k <= 3'd0;
+        l <= 3'd0;
+    end
+    
+    always @ (posedge clk)
+    begin
+        line_buffer_image_ch1 [i][j] <= image_channel1;     
+    end
+    
+    always @ (posedge clk)
+    begin
+        line_buffer_image_ch2 [i][j] <= image_channel2;     
+    end
+
+    always @ (posedge clk)
+    begin
+        line_buffer_image_ch3 [i][j] <= image_channel3;     
+    end
+    
+    always @ (posedge clk)
+    begin
+        i <= i+1;
+        j <= j+1;
+    end
+    
+    always @ (posedge clk)
+    begin
+        line_buffer_weight_f1c1 [k][l] <= filter1ch1;
+    end
+    
+endmodule
